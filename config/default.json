@@ -1,0 +1,18 @@
+{
+  "app": {
+    "tracksPerPoll": 5
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379
+  },
+  "security": {
+    "workFactor": 10
+  },
+  "timer": {
+    "days": [1,2,3,4,5],
+    "hour": 17,
+    "minute": 0,
+    "tick": 1000
+  }
+}
