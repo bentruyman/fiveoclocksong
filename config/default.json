@@ -9,6 +9,10 @@
   "security": {
     "workFactor": 10
   },
+  "spotify": {
+    "username": "user_name",
+    "password": "1337 pass"
+  },
   "timer": {
     "days": [1,2,3,4,5],
     "hour": 17,
