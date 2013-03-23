@@ -9,10 +9,12 @@
   "author": "Ben Truyman <ben@truyman.co> (http://bentruyman.com/)",
   "readmeFilename": "README.md",
   "dependencies": {
+    "bcrypt": "~0.7.5",
     "express": "~3.1.0",
     "faye": "~0.8.9",
     "mongoose": "~3.6.0",
     "q": "~0.9.2",
+    "redis": "~0.8.2",
     "settings": "~0.1.0",
     "spotify-web": "~0.1.0",
     "vein": "~0.5.3"
