@@ -7,7 +7,6 @@
     "port": 6379
   },
   "security": {
-    "salt": "mOYjKEw8LXPx5GLI8/wdNpWAW++ZDTxXaNJ5Q8cK",
     "workFactor": 10
   },
   "timer": {
