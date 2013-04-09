@@ -7,18 +7,18 @@ module.exports = function (config) {
     endTime:   { type: Number, required: true },
     tracks:    [String]
   });
-  
+
   PollSchema.methods.upvote = function (username, trackIndex, hollaback) {};
-  
+
   PollSchema.methods.downvote = function (username, trackIndex, hollaback) {};
-  
+
   PollSchema.methods.getTrackData = function (trackIndex, hollaback) {};
-  
+
   PollSchema.methods.getAllTrackData = function (hollaback) {};
-  
+
   PollSchema.methods.getTrackVotes = function (trackIndex, hollaback) {};
-  
+
   PollSchema.methods.getAllTrackVotes = function (hollaback) {};
-  
+
   return PollSchema;
 };
