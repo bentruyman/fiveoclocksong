@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git://github.com/bentruyman/fiveoclocksong.git"
   },
+  "scripts": {
+    "test": "grunt"
+  },
   "author": "Ben Truyman <ben@truyman.co> (http://bentruyman.com/)",
   "readmeFilename": "README.md",
   "dependencies": {
