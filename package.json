@@ -18,5 +18,11 @@
     "settings": "~0.1.0",
     "spotify-web": "~0.1.0",
     "vein": "~0.5.3"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cafe-mocha": "~0.1.1",
+    "grunt-contrib-jshint": "~0.4.2",
+    "should": "~1.2.2"
   }
 }
