@@ -1,0 +1,8 @@
+{
+  "mongodb": {
+    "database": "fiveoclocksong-test"
+  },
+  "redis": {
+    "database": 2
+  }
+}

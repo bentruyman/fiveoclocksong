@@ -2,9 +2,15 @@
   "app": {
     "tracksPerPoll": 5
   },
+  "mongodb": {
+    "host": "127.0.0.1",
+    "port": 27017,
+    "database": "fiveoclocksong"
+  },
   "redis": {
     "host": "127.0.0.1",
-    "port": 6379
+    "port": 6379,
+    "database": 0
   },
   "security": {
     "workFactor": 10
@@ -17,6 +23,6 @@
     "days": [1,2,3,4,5],
     "hour": 17,
     "minute": 0,
-    "tick": 1000
+    "interval": 1000
   }
 }
