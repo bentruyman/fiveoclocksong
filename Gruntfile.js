@@ -4,7 +4,7 @@ module.exports = function (grunt) {
       src: "test/**/*.js",
       options: {
         ui: "bdd",
-        require: ["should"]
+        require: ["rewire", "should", "sinon"]
       }
     },
     jshint: {
