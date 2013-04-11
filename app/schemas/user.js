@@ -9,4 +9,6 @@ UserSchema.methods.verifyCredentials = function (password, hollaback) {};
 
 UserSchema.statics.hashPassword = hashPassword;
 
-function hashPassword(str) {}
+function hashPassword(str, callback) {
+
+}
