@@ -17,6 +17,6 @@ module.exports = function (config) {
   return TrackService;
 };
 
-function formatTrack(source) {
+exports.Track = function (source) {
 
-}
+};
