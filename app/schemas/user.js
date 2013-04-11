@@ -1,16 +1,12 @@
 var Schema = require("mongoose").Schema;
 
-module.exports = function (config) {
-  var UserSchema = new Schema({
-    name: { type: String, required: true, index: true },
-    password: { type: String, required: true, set: hashPassword }
-  });
+var UserSchema = module.exports = new Schema({
+  name: { type: String, required: true, index: true },
+  password: { type: String, required: true, set: hashPassword }
+});
 
-  UserSchema.methods.verifyCredentials = function (password, hollaback) {};
+UserSchema.methods.verifyCredentials = function (password, hollaback) {};
 
-  function hashPassword(str) {
+UserSchema.statics.hashPassword = hashPassword;
 
-  }
-
-  return UserSchema;
-};
+function hashPassword(str) {}
