@@ -1,6 +1,10 @@
 var Schema = require("mongoose").Schema;
 
-var UserSchema = module.exports = new Schema({
+module.exports = function (mongoose) {
+  return mongoose.model("User", UserSchema);
+};
+
+var UserSchema = exports.Schema = new Schema({
   name: { type: String, required: true, index: true },
   password: { type: String, required: true, set: hashPassword }
 });

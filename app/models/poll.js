@@ -1,6 +1,10 @@
 var Schema = require("mongoose").Schema;
 
-var PollSchema = module.exports = new Schema({
+module.exports = function (mongoose) {
+  return mongoose.model("Poll", PollSchema);
+};
+
+var PollSchema = exports.Schema = new Schema({
   date:      { type: String, required: true, index: true },
   startTime: { type: Number, required: true },
   endTime:   { type: Number, required: true },
@@ -22,5 +26,9 @@ PollSchema.methods.getAllTrackVotes = function (hollaback) {};
 PollSchema.statics.convertDateToTime = convertDateToTime;
 
 function convertDateToTime(date) {
-  return date.getTime();
+  if (date instanceof Date) {
+    return date.getTime();
+  }
+
+  return date;
 }
