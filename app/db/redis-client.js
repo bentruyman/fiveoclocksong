@@ -1,10 +1,17 @@
-var redis = require("redis");
+var redis = require("redis"),
+    config = require("../../config");
 
-var RedisClient = module.exports = function RedisClient(host, port, db) {
+var RedisClient = module.exports = function RedisClient(host, port, database) {
   var conf = config.redis,
-      client = redis.createClient(port, host);
+      client;
 
-  client.select(db);
+  host = host || conf.host;
+  port = port || conf.port;
+  database = database || conf.database;
+
+  redis.createClient(port, host);
+
+  client.select(database);
 
   return client;
 };
