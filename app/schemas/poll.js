@@ -18,3 +18,9 @@ PollSchema.methods.getAllTrackData = function (hollaback) {};
 PollSchema.methods.getTrackVotes = function (trackIndex, hollaback) {};
 
 PollSchema.methods.getAllTrackVotes = function (hollaback) {};
+
+PollSchema.statics.convertDateToTime = convertDateToTime;
+
+function convertDateToTime(date) {
+  return date.getTime();
+}
