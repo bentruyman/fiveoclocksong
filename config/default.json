@@ -1,5 +1,19 @@
 {
   "app": {
+    "days": [1,2,3,4,5],
+    "poll": {
+      "start": {
+        "hour": 8,
+        "minute": 0
+      },
+      "end": {
+        "hour": 17,
+        "minute": 0
+      }
+    },
+    "timer": {
+      "interval": 1000
+    },
     "tracksPerPoll": 5
   },
   "mongodb": {
@@ -19,11 +33,5 @@
     "username": "user_name",
     "password": "1337 pass",
     "playlistId": "spotify:user:bentruyman:playlist:0k5gquaSqbsaMqEqnwH3qL"
-  },
-  "timer": {
-    "days": [1,2,3,4,5],
-    "hour": 17,
-    "minute": 0,
-    "interval": 1000
   }
 }
