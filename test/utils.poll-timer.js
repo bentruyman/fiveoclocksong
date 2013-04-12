@@ -1,6 +1,6 @@
-var PollRunner = require("../app/utils/poll-runner").PollRunner;
+var PollTimer = require("../app/utils/poll-timer").PollTimer;
 
-describe("Poll Runner", function () {
+describe("Poll Timer", function () {
   it("should be inactive before the poll has started");
   it("should be active after the poll has started");
   it("should notify event listeners when a poll has started");
