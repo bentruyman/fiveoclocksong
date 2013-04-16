@@ -12,7 +12,7 @@
       }
     },
     "timer": {
-      "interval": 1000
+      "interval": 500
     },
     "tracksPerPoll": 5
   },
