@@ -12,11 +12,21 @@ module.exports = function (grunt) {
       options: {
         jshintrc: ".jshintrc"
       }
+    },
+    watch: {
+      scripts: {
+        files: ["app/**/*.js", "test/**/*.js"],
+        tasks: ['default'],
+        options: {
+          interrupt: true
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks("grunt-cafe-mocha");
   grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-contrib-watch");
 
   grunt.registerTask("default", ["jshint", "cafemocha"]);
 };
