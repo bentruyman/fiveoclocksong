@@ -3,8 +3,14 @@ module.exports = function (grunt) {
     cafemocha: {
       src: "test/**/*.js",
       options: {
-        ui: "bdd",
-        require: ["rewire", "should", "sinon"]
+        require: ["rewire", "should", "sinon"],
+        reporter: "spec",
+        ui: "bdd"
+      }
+    },
+    env: {
+      test: {
+        NODE_ENV: "test"
       }
     },
     jshint: {
@@ -16,7 +22,7 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ["app/**/*.js", "test/**/*.js"],
-        tasks: ['default'],
+        tasks: ["test"],
         options: {
           interrupt: true
         }
@@ -27,6 +33,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-cafe-mocha");
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-env");
 
-  grunt.registerTask("default", ["jshint", "cafemocha"]);
+  grunt.registerTask("test", ["env:test", "cafemocha", "jshint"]);
+  grunt.registerTask("default", "test");
 };
