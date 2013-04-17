@@ -9,5 +9,5 @@ var MongooseClient = module.exports = function MongooseClient(host, port, databa
   port = port || conf.port;
   database = database || conf.database;
 
-  return mongoose.connect("mongodb://" + host + ":" + port + "/" + db);
+  return mongoose.connect("mongodb://" + host + ":" + port + "/" + database);
 };
