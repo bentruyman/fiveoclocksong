@@ -1,3 +1,8 @@
+var config = require("../config"),
+    MongooseClient = require("../app/db/mongoose-client"),
+    mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
+    Poll = require("../app/models/poll")(mongoose);
+
 describe("Poll Schema", function () {
   it("should convert a Date into a time integer", function () {
     var precomputedTime = 1357020000000,
