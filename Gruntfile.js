@@ -21,7 +21,7 @@ module.exports = function (grunt) {
     },
     watch: {
       scripts: {
-        files: ["app/**/*.js", "test/**/*.js"],
+        files: ["Gruntfile.js", "config/*.js*", "app/**/*.js", "test/**/*.js"],
         tasks: ["test"],
         options: {
           interrupt: true
