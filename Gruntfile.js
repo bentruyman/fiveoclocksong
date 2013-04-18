@@ -35,6 +35,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-env");
 
-  grunt.registerTask("test", ["env:test", "cafemocha", "jshint"]);
+  grunt.registerTask("test", ["env:test", "jshint", "cafemocha"]);
   grunt.registerTask("default", "test");
 };
