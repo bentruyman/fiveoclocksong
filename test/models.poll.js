@@ -4,6 +4,20 @@ var config = require("../config"),
     Poll = require("../app/models/poll")(mongoose);
 
 describe("Poll Schema", function () {
+  describe("Tracks", function () {
+
+  });
+
+  describe("Voting", function () {
+    it("should allow for upvotes", function () {
+
+    });
+
+    it("should allow for downvotes", function () {
+
+    });
+  });
+
   it("should convert a Date into a time integer", function () {
     var precomputedTime = 1357020000000,
         date = new Date;
