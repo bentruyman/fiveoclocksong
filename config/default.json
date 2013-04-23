@@ -30,8 +30,6 @@
     "workFactor": 10
   },
   "spotify": {
-    "username": "user_name",
-    "password": "1337 pass",
     "playlistId": "spotify:user:bentruyman:playlist:0k5gquaSqbsaMqEqnwH3qL"
   }
 }
