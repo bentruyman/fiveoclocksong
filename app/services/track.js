@@ -34,20 +34,11 @@ TrackService.prototype.getPlaylist = function (playlistId, hollaback) {
     if (err) {
       hollaback(err);
     } else {
-      tracks = playlist.contents.items;
-
-      playlist.contents.items.forEach(function (track) {
-        promises.push(Q.ninvoke(self, "getTrack", track.uri));
+      tracks = playlist.contents.items.map(function (item) {
+        return item.uri;
       });
 
-      // TODO: handle error
-      Q.all(promises).then(function (tracks) {
-        var sorted = tracks.sort(function (a, b) {
-          return a.name > b.name;
-        });
-
-        hollaback(null, sorted);
-      });
+      self.getTracks(tracks, hollaback);
     }
   });
 };
