@@ -8,18 +8,40 @@ module.exports = function (mongoose) {
 
 var UserSchema = exports.Schema = new Schema({
   name: { type: String, required: true, index: true },
-  password: { type: String, required: true, set: hashPassword }
+  _password: { type: String, required: true }
 });
 
-UserSchema.methods.verifyCredentials = function (password, hollaback) {
-  bcrypt.compare(password, this.password, function (err, res) {
-    hollaback(err, res);
+UserSchema.methods.setPassword = function (password, hollaback) {
+  var self = this;
+
+  bcrypt.genSalt(config.security.workFactor, function (err, salt) {
+    if (err) {
+      hollaback(err);
+    } else {
+      bcrypt.hash(password, salt, function (err, hash) {
+        if (err) {
+          hollaback(err);
+        } else {
+          self._password = hash;
+          hollaback(null, hash);
+        }
+      });
+    }
   });
 };
 
-UserSchema.statics.hashPassword = hashPassword;
+UserSchema.methods.verifyCredentials = function (password, hollaback) {
+  var currentPassword = this._password;
 
-function hashPassword(str) {
-  // TOOD: should not be sync...
-  return bcrypt.hashSync(str, config.security.workFactor);
-}
+  if (typeof currentPassword === "undefined") {
+    hollaback("User does not have a password.", false);
+  } else {
+    bcrypt.compare(password, this._password, function (err, res) {
+      hollaback(err, res);
+    });
+  }
+};
+
+UserSchema.virtual("password", function () {
+  return this._password;
+});
