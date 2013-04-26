@@ -7,8 +7,14 @@ var config = require("../config"),
     User = require("../app/models/user")(mongoose);
 
 describe("User Schema", function () {
+  beforeEach(function (done) {
+    User.remove(function (err) {
+      done();
+    });
+  });
+
   it("should require a username", function (done) {
-    var ben = new User({ password: "p@55W0rd" });
+    var ben = new User();
 
     ben.save(function (err) {
       should.exist(err.errors.name);
@@ -22,6 +28,17 @@ describe("User Schema", function () {
     ben.save(function (err) {
       should.exist(err.errors._password);
       done();
+    });
+  });
+
+  it("should require a username and password", function (done) {
+    var ben = new User({ name: "ben" });
+
+    ben.setPassword("p@55W0rd", function () {
+      ben.save(function (err) {
+        should.not.exist(err);
+        done();
+      });
     });
   });
 
