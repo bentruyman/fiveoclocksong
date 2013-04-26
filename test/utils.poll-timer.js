@@ -1,5 +1,7 @@
-var sinon = require("sinon"),
-    PollTimer = require("../app/utils/poll-timer");
+var should = require("should"),
+    sinon = require("sinon");
+
+var PollTimer = require("../app/utils/poll-timer");
 
 describe("Poll Timer", function () {
   describe("Constructor", function () {

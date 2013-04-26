@@ -1,9 +1,8 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     cafemocha: {
-      src: "test/**/*.js",
+      src: "test/models.user.js",
       options: {
-        require: ["rewire", "should", "sinon"],
         reporter: "spec",
         ui: "bdd"
       }
