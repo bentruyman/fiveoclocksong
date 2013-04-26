@@ -9,7 +9,7 @@ var RedisClient = module.exports = function RedisClient(host, port, database) {
   port = port || conf.port;
   database = database || conf.database;
 
-  redis.createClient(port, host);
+  client = redis.createClient(port, host);
 
   client.select(database);
 
