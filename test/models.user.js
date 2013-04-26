@@ -1,13 +1,28 @@
+var should = require("should"),
+    sinon = require("sinon");
+
 var config = require("../config"),
     MongooseClient = require("../app/db/mongoose-client"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
     User = require("../app/models/user")(mongoose);
 
 describe("User Schema", function () {
-  it("should accept a username", function () {
-    var ben = new User({ name: "ben", password: "p@55W0rd" });
+  it("should require a username", function (done) {
+    var ben = new User({ password: "p@55W0rd" });
 
-    ben.name.should.equal("ben");
+    ben.save(function (err) {
+      should.exist(err.errors.name);
+      done();
+    });
+  });
+
+  it("should require a password", function (done) {
+    var ben = new User({ ben: "ben" });
+
+    ben.save(function (err) {
+      should.exist(err.errors.password);
+      done();
+    });
   });
 
   describe("Authentication", function () {

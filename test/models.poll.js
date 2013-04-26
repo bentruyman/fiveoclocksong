@@ -1,3 +1,6 @@
+var should = require("should"),
+    sinon = require("sinon");
+
 var config = require("../config"),
     MongooseClient = require("../app/db/mongoose-client"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
