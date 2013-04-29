@@ -36,7 +36,7 @@ UserSchema.methods.verifyCredentials = function (password, hollaback) {
   if (typeof currentPassword === "undefined") {
     hollaback("User does not have a password.", false);
   } else {
-    bcrypt.compare(password, this._password, function (err, res) {
+    bcrypt.compare(password, currentPassword, function (err, res) {
       hollaback(err, res);
     });
   }
