@@ -3,16 +3,28 @@ var should = require("should"),
 
 var config = require("../config"),
     MongooseClient = require("../app/db/mongoose-client"),
-    RedisClient = require("../app/db/redis-client"),
+    RedisClient    = require("../app/db/redis-client"),
+    TrackService   = require("../app/services/track"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
     redis = new RedisClient(config.redis.host, config.redis.port, config.redis.database),
-    Poll = require("../app/models/poll")(mongoose);
+    trackService = new TrackService(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PASSWORD),
+    Poll = require("../app/models/poll")(mongoose, redis, trackService);
 
 describe("Poll Schema", function () {
+  before(function (done) {
+    trackService.open(done);
+  });
+
   beforeEach(function (done) {
-    Poll.remove(function (err) {
-      done();
+    Poll.remove(function () {
+      redis.flushall(function () {
+        done();
+      });
     });
+  });
+
+  after(function () {
+    trackService.close();
   });
 
   it("should convert a Date into date string", function () {
@@ -91,16 +103,141 @@ describe("Poll Schema", function () {
   });
 
   describe("Tracks", function () {
+    it("should retrieve a track's data", function (done) {
+      var poll = new Poll({
+        date: new Date,
+        tracks: ["spotify:track:0FutrWIUM5Mg3434asiwkp"]
+      });
 
+      poll.getTrackData(0, function (err, track) {
+        should.not.exist(err);
+        track.name.should.equal("Never Gonna Give You Up");
+        track.artist.should.equal("Rick Astley");
+        done();
+      });
+    });
+
+    it("should provide an error when requesting the data of a non-existent track", function (done) {
+      var poll = new Poll({ date: new Date });
+
+      poll.getTrackData(0, function (err) {
+        should.exist(err);
+        done();
+      });
+    });
   });
 
   describe("Voting", function () {
-    it("should allow for upvotes", function () {
+    describe("Up/Downvotes", function () {
+      it("should allow for upvotes", function (done) {
+        var poll = new Poll({ date: new Date });
 
+        poll.upvote("ben", 0, function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
+
+      it("should allow for downvotes", function (done) {
+        var poll = new Poll({ date: new Date });
+
+        poll.downvote("ben", 0, function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
     });
 
-    it("should allow for downvotes", function () {
+    describe("Retrieval", function () {
+      describe("Single", function () {
+        it("should return votes for a single poll's track", function (done) {
+          var poll = new Poll({
+            date: new Date,
+            tracks: ["foo", "bar"]
+          });
 
+          poll.upvote("ben", 0, function (err) {
+            poll.getTrackVotes(0, function (err, votes) {
+              should.not.exist(err);
+              votes.ben.should.equal(1);
+              done();
+            });
+          });
+        });
+
+        it("should provide an empty object when requesting votes for an unvoted track", function (done) {
+          var poll = new Poll({
+            date: new Date,
+            tracks: ["foo"]
+          });
+
+          poll.getTrackVotes(0, function (err, votes) {
+            should.not.exist(err);
+            votes.should.eql({});
+            done();
+          });
+        });
+
+        it("should provide an error when requesting votes for a non-existent track", function (done) {
+          var poll = new Poll({
+            date: new Date,
+            tracks: ["foo"]
+          });
+
+          poll.upvote("ben", 0, function (err) {
+            poll.getTrackVotes(1, function (err, votes) {
+              should.exist(err);
+              done();
+            });
+          });
+        });
+      });
+
+      describe("Multiple", function () {
+        it("should return votes for all of the poll's tracks", function (done) {
+          var poll = new Poll({
+            date: new Date,
+            tracks: ["foo", "bar"]
+          });
+
+          poll.upvote("ben", 0, function (err) {
+            poll.upvote("lee", 1, function (err) {
+              poll.getAllTrackVotes(function (err, votes) {
+                should.not.exist(err);
+                votes[0].ben.should.equal(1);
+                votes[1].lee.should.equal(1);
+                done();
+              });
+            });
+          });
+        });
+
+        it("should return an empty array of votes if no tracks exist", function (done) {
+          var poll = new Poll({
+            date: new Date
+          });
+
+          poll.getAllTrackVotes(function (err, votes) {
+            should.not.exist(err);
+            votes.should.be.empty;
+            done();
+          });
+        });
+
+        it("should return empty objects for all of the poll's unvoted tracks", function (done) {
+          var poll = new Poll({
+            date: new Date,
+            tracks: ["foo", "bar"]
+          });
+
+          poll.getAllTrackVotes(function (err, votes) {
+            should.not.exist(err);
+            votes[0].should.eql({});
+            votes[1].should.eql({});
+            done();
+          });
+        });
+      });
     });
   });
 });

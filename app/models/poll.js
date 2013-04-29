@@ -1,33 +1,92 @@
 var Schema = require("mongoose").Schema,
+    Q = require("q"),
     config = require("../../config"),
     pollConfig = config.app.poll;
 
-module.exports = function (mongoose) {
+module.exports = function (mongoose, redis, trackService) {
+  var PollSchema = exports.Schema = new Schema({
+    date:      { type: String, required: true, index: true, set: setDate },
+    startTime: { type: Number, required: true },
+    endTime:   { type: Number, required: true },
+    tracks:    { type: Array, "default": [] }
+  });
+
+  PollSchema.methods.upvote = function (username, trackIndex, hollaback) {
+    redis.hincrby(createTrackKey(this, trackIndex), username, 1, function (err) {
+      if (err) {
+        hollaback(err);
+      } else {
+        hollaback();
+      }
+    });
+  };
+
+  PollSchema.methods.downvote = function (username, trackIndex, hollaback) {
+    redis.hincrby(createTrackKey(this, trackIndex), username, -1, function (err) {
+      if (err) {
+        hollaback(err);
+      } else {
+        hollaback();
+      }
+    });
+  };
+
+  PollSchema.methods.getTrackData = function (trackIndex, hollaback) {
+    var track = this.tracks[trackIndex];
+
+    if (typeof track === "undefined") {
+      hollaback("Track at index \"" + trackIndex + "\" does not exist");
+    } else {
+      trackService.getTrack(track, hollaback);
+    }
+  };
+
+  PollSchema.methods.getAllTrackData = function (hollaback) {};
+
+  PollSchema.methods.getTrackVotes = function (trackIndex, hollaback) {
+    if (typeof this.tracks[trackIndex] === "undefined") {
+      hollaback("Track of index \"" + trackIndex + "\" does not exist");
+    } else {
+      redis.hgetall(createTrackKey(this, trackIndex), function (err, votes) {
+        var remapped = {};
+
+        if (err) {
+          hollaback(err);
+        } else if (votes === null) {
+          hollaback(null, {});
+        } else {
+          // remap votes into integers
+          Object.keys(votes).forEach(function (voter) {
+            remapped[voter] = parseInt(votes[voter], 10);
+          });
+
+          hollaback(null, remapped);
+        }
+      });
+    }
+  };
+
+  PollSchema.methods.getAllTrackVotes = function (hollaback) {
+    var promises = [],
+        i = 0,
+        length = this.tracks.length;
+
+    for (; i < length; i++) {
+      promises.push(Q.ninvoke(this, "getTrackVotes", i));
+    }
+
+    // TODO: handle error
+    Q.all(promises).then(function (votes) {
+      hollaback(null, votes);
+    });
+  };
+
+  PollSchema.statics.createBoundaryTime   = createBoundaryTime;
+  PollSchema.statics.createDateFromString = createDateFromString;
+  PollSchema.statics.createStringFromDate = createStringFromDate;
+
   return mongoose.model("Poll", PollSchema);
 };
-
-var PollSchema = exports.Schema = new Schema({
-  date:      { type: String, required: true, index: true, set: setDate },
-  startTime: { type: Number, required: true },
-  endTime:   { type: Number, required: true },
-  tracks:    [String]
-});
-
-PollSchema.methods.upvote = function (username, trackIndex, hollaback) {};
-
-PollSchema.methods.downvote = function (username, trackIndex, hollaback) {};
-
-PollSchema.methods.getTrackData = function (trackIndex, hollaback) {};
-
-PollSchema.methods.getAllTrackData = function (hollaback) {};
-
-PollSchema.methods.getTrackVotes = function (trackIndex, hollaback) {};
-
-PollSchema.methods.getAllTrackVotes = function (hollaback) {};
-
-PollSchema.statics.createBoundaryTime = createBoundaryTime;
-PollSchema.statics.createDateFromString = createDateFromString;
-PollSchema.statics.createStringFromDate = createStringFromDate;
 
 function createBoundaryTime(date, hours, minutes) {
   var clone = new Date(date);
@@ -65,6 +124,10 @@ function createStringFromDate(date) {
       day   = pad(date.getDate());
 
   return '' + year + month + day;
+}
+
+function createTrackKey(poll, trackIndex) {
+  return poll.date + ":" + poll.tracks[trackIndex];
 }
 
 function pad(num) {
