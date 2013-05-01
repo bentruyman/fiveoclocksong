@@ -60,21 +60,21 @@ describe("Track Service", function () {
       it("should return a random list of tracks from a specified playlist", function (done) {
         var limit = 2,
             playlistURI = "spotify:user:bentruyman:playlist:2dyVZw6oHMiwqiA8XDIxcs",
-            trackNames = [
-              "Anything Goes",
-              "Bullet",
-              "Never Gonna Give You Up",
-              "The Chain",
-              "Tom Sawyer",
-              "Youth"
+            trackIds = [
+              "spotify:track:0FutrWIUM5Mg3434asiwkp",
+              "spotify:track:3QZ7uX97s82HFYSmQUAN1D",
+              "spotify:track:3K29Wd6mqnUaQhz1YKZ62T",
+              "spotify:track:2X6gdRlGOQgfaXU9ALUQFQ",
+              "spotify:track:4XlDeNWGcZQgMEWDB6Vc7b",
+              "spotify:track:6nFZrzFprkTwyUENsJ6XGn"
             ];
 
         trackService.getRandomTracks(playlistURI, limit, function (err, tracks) {
           if (err) { throw err; }
 
           tracks.length.should.equal(limit);
-          inArray(tracks[0].name, trackNames).should.be.true;
-          inArray(tracks[1].name, trackNames).should.be.true;
+          inArray(tracks[0], trackIds).should.be.true;
+          inArray(tracks[1], trackIds).should.be.true;
           tracks.length.should.equal(2);
 
           done();

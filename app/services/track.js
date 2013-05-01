@@ -59,7 +59,7 @@ TrackService.prototype.getRandomTracks = function (playlistId, limit, hollaback)
           randoms.push(ids.splice(Math.floor(Math.random() * ids.length))[0]);
         }
 
-        self.getTracks(randoms, hollaback);
+        hollaback(null, randoms);
       }
     }
   });
