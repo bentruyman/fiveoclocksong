@@ -40,17 +40,16 @@ describe("Track Service", function () {
   describe("Playlists", function () {
     this.timeout(5000);
 
-    it("should return a list of tracks alphabetically sorted by name", function (done) {
+    it("should return a list of playlist track ids", function (done) {
       var playlistURI = "spotify:user:bentruyman:playlist:2dyVZw6oHMiwqiA8XDIxcs";
 
-      trackService.getPlaylist(playlistURI, function (err, tracks) {
-        tracks[0].name.should.equal("Anything Goes");
-        tracks[1].name.should.equal("Bullet");
-        tracks[2].name.should.equal("Never Gonna Give You Up");
-        tracks[3].name.should.equal("The Chain");
-        tracks[4].name.should.equal("Tom Sawyer");
-        tracks[5].name.should.equal("Youth");
-
+      trackService.getPlaylist(playlistURI, function (err, ids) {
+        ids[0].should.equal("spotify:track:0FutrWIUM5Mg3434asiwkp");
+        ids[1].should.equal("spotify:track:3QZ7uX97s82HFYSmQUAN1D");
+        ids[2].should.equal("spotify:track:3K29Wd6mqnUaQhz1YKZ62T");
+        ids[3].should.equal("spotify:track:2X6gdRlGOQgfaXU9ALUQFQ");
+        ids[4].should.equal("spotify:track:4XlDeNWGcZQgMEWDB6Vc7b");
+        ids[5].should.equal("spotify:track:6nFZrzFprkTwyUENsJ6XGn");
         done();
       });
     });
@@ -76,6 +75,7 @@ describe("Track Service", function () {
           tracks.length.should.equal(limit);
           inArray(tracks[0].name, trackNames).should.be.true;
           inArray(tracks[1].name, trackNames).should.be.true;
+          tracks.length.should.equal(2);
 
           done();
         });

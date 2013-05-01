@@ -29,35 +29,37 @@ TrackService.prototype.getPlaylist = function (playlistId, hollaback) {
 
   this._client.playlist(playlistId, function (err, playlist) {
     var promises = [],
-        tracks;
+        trackIds;
 
     if (err) {
       hollaback(err);
     } else {
-      tracks = playlist.contents.items.map(function (item) {
+      trackIds = playlist.contents.items.map(function (item) {
         return item.uri;
       });
 
-      self.getTracks(tracks, hollaback);
+      hollaback(null, trackIds);
     }
   });
 };
 
 TrackService.prototype.getRandomTracks = function (playlistId, limit, hollaback) {
-  this.getPlaylist(playlistId, function (err, tracks) {
+  var self = this;
+
+  this.getPlaylist(playlistId, function (err, ids) {
     var randoms = [];
 
     if (err) {
       hollaback(err);
     } else {
-      if (limit > tracks.length) {
+      if (limit > ids.length) {
         hollaback("Not enough tracks to satisfy a limit of \"" + limit + "\"");
       } else {
         while(limit > randoms.length) {
-          randoms.push(tracks.splice(Math.floor(Math.random() * tracks.length))[0]);
+          randoms.push(ids.splice(Math.floor(Math.random() * ids.length))[0]);
         }
 
-        hollaback(null, randoms);
+        self.getTracks(randoms, hollaback);
       }
     }
   });
