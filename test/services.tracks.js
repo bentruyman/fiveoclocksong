@@ -37,6 +37,16 @@ describe("Track Service", function () {
     trackService.close();
   });
 
+  describe("Authentication", function () {
+    it("should provide an error if Spotify credentials are incorrect", function (done) {
+      var trackService = new TrackService("bilbo", "baggins");
+
+      trackService.open(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+  });
   describe("Playlists", function () {
     this.timeout(5000);
 
