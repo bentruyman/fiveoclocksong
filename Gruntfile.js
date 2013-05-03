@@ -1,5 +1,15 @@
 module.exports = function (grunt) {
   grunt.initConfig({
+    blanket: {
+      instrument: {
+        options: {
+          debug: true
+        },
+        files: {
+          "app-cov/": ["app/"]
+        }
+      }
+    },
     cafemocha: {
       src: "test/**/*.js",
       options: {
@@ -7,9 +17,15 @@ module.exports = function (grunt) {
         ui: "bdd"
       }
     },
+    clean: ["app-cov", "coverage.html"],
     env: {
       test: {
         NODE_ENV: "test"
+      }
+    },
+    exec: {
+      coverage: {
+        cmd: "mocha -R html-cov >> coverage.html"
       }
     },
     jshint: {
@@ -29,11 +45,16 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks("grunt-blanket");
   grunt.loadNpmTasks("grunt-cafe-mocha");
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-env");
+  grunt.loadNpmTasks('grunt-exec');
 
   grunt.registerTask("test", ["env:test", "jshint", "cafemocha"]);
+  grunt.registerTask("coverage", ["clean", "blanket", "exec:coverage"]);
+  grunt.registerTask("all", ["test", "coverage"]);
   grunt.registerTask("default", "test");
 };

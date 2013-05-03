@@ -1,7 +1,7 @@
 var should = require("should"),
     sinon = require("sinon");
 
-var TrackService = require("../app/services/track");
+var TrackService = require("../app-cov/services/track");
 
 describe("Track Service", function () {
   var trackService;
