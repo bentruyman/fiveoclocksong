@@ -48,6 +48,28 @@ describe("Poll Timer", function () {
 
       timer.start();
     });
+
+    it("should not notify event listeners when the timer has been explicitly stopped", function (done) {
+      var spy = sinon.spy(),
+          later = Date.now() + 250,
+          littleLater = later + 1000;
+
+      var timer = new PollTimer(later, littleLater);
+
+      timer.on("start", spy);
+
+      timer.start();
+
+      setTimeout(function () {
+        timer.stop();
+      }, 100);
+
+      setTimeout(function () {
+        spy.called.should.be.false;
+        done();
+      }, 1500);
+    });
+
   });
 
   describe("State", function () {
