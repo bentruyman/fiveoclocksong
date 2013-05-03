@@ -2,13 +2,13 @@ var should = require("should"),
     sinon = require("sinon");
 
 var config = require("../config"),
-    MongooseClient = require("../app/db/mongoose-client"),
-    RedisClient    = require("../app/db/redis-client"),
-    TrackService   = require("../app/services/track"),
+    MongooseClient = require("../app-cov/db/mongoose-client"),
+    RedisClient    = require("../app-cov/db/redis-client"),
+    TrackService   = require("../app-cov/services/track"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
     redis = new RedisClient(config.redis.host, config.redis.port, config.redis.database),
     trackService = new TrackService(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PASSWORD),
-    Poll = require("../app/models/poll")(mongoose, redis, trackService);
+    Poll = require("../app-cov/models/poll")(mongoose, redis, trackService);
 
 describe("Poll Schema", function () {
   before(function (done) {
