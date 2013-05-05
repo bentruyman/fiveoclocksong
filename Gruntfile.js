@@ -53,8 +53,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-env");
   grunt.loadNpmTasks('grunt-exec');
 
-  grunt.registerTask("test", ["env:test", "jshint", "cafemocha"]);
-  grunt.registerTask("coverage", ["clean", "blanket", "exec:coverage"]);
-  grunt.registerTask("all", ["test", "coverage"]);
+  grunt.registerTask("test", ["env:test", "jshint", "blanket", "exec:coverage", "cafemocha"]);
+  grunt.registerTask("all", ["test"]);
   grunt.registerTask("default", "test");
 };
