@@ -11,7 +11,14 @@ var mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, conf
     redis = new RedisClient(config.redis.host, config.redis.port, config.redis.database),
     trackService = new TrackService(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PASSWORD);
 
-var Poll = require("../models/poll")(mongoose, redis, trackService);
+var Configurable = require("../utils/configurable"),
+    Poll = require("../models/poll")(mongoose, redis, trackService);
+
+var Master = module.exports = function (options) {
+
+};
+
+Master.prototype = new Configurable;
 
 var messengerServer = new faye.NodeAdapter({
       mount: config.messenger.mount,
