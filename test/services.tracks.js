@@ -4,6 +4,8 @@ var should = require("should"),
 var TrackService = require("../app-cov/services/track");
 
 describe("Track Service", function () {
+  this.timeout(5000);
+
   var trackService;
 
   function inArray(needle, haystack) {
@@ -20,8 +22,6 @@ describe("Track Service", function () {
   }
 
   before(function (done) {
-    this.timeout(5000);
-
     var username = process.env.SPOTIFY_USERNAME,
         password = process.env.SPOTIFY_PASSWORD;
 
