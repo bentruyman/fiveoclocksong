@@ -1,3 +1,5 @@
+var http = require("http");
+
 var faye = require("faye"),
     fayeRedis = require("faye-redis");
 
@@ -14,118 +16,65 @@ var mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, conf
 var Configurable = require("../utils/configurable"),
     Poll = require("../models/poll")(mongoose, redis, trackService);
 
+// public interface
 var Master = module.exports = function (options) {
+  var self = this,
+      bayeux;
 
+  // extend configuration options
+  if (options) {
+    Object.keys(options).forEach(function (key) {
+      self.set(key, options[key]);
+    });
+  }
+
+  // set initial instance property values
+  this.currentPoll = null;
+  this.pollTimer = null;
+
+  bayeux = new faye.NodeAdapter({
+    mount: "/" + config.messenger.mount,
+    timeout: 45,
+    engine: {
+      type: fayeRedis,
+      host: config.redis.host,
+      port: config.redis.port,
+      database: config.redis.database
+    }
+  });
+  this.messengerServer = http.createServer();
+  this.messengerClient = new faye.Client("http://localhost:" + config.messenger.port + "/" + config.messenger.mount);
+
+  bayeux.attach(this.messengerServer);
 };
 
 Master.prototype = new Configurable;
 
-var messengerServer = new faye.NodeAdapter({
-      mount: config.messenger.mount,
-      engine: {
-        type: fayeRedis,
-        host: config.redis.host,
-        port: config.redis.port
-      }
-    }),
-    messengerClient = messengerServer.getClient();
+Master.prototype.start = function () {
+  var currentPoll = this.currentPoll;
 
-var currentPoll,
-    pollTimer;
+  // start new poll timer
+  this.pollTimer = new PollTimer(currentPoll.startTime, currentPoll.endTime);
+  this.pollTimer.on("start", this._handlePollStart.bind(this));
+  this.pollTimer.on("stop",  this._handlePollStop.bind(this));
+  this.pollTimer.start();
 
-function getOrCreatePoll(date, hollaback) {
-  var dateString = Poll.createStringFromDate(date);
+  // start the messenger server
+  this.messengerServer.listen(config.messenger.port);
+};
 
-  Poll.findOne({ date: dateString }, function (err, poll) {
-    if (err) {
-      hollaback(err);
-    } else if (poll !== null) {
-      hollaback(null, poll);
-    } else {
-      trackService.getRandomTracks(config.spotify.playlistId, config.app.tracksPerPoll, function (err, tracks) {
-        var poll;
+Master.prototype.stop = function () {
+  // stop the messenger server
+  this.messengerServer.close();
+};
 
-        if (err) {
-          hollaback(err);
-        } else {
-          poll = new Poll({
-            date: dateString,
-            tracks: tracks
-          });
+// private interface
 
-          poll.save(function (err) {
-            if (err) {
-              hollaback(err);
-            } else {
-              hollaback(null, poll);
-            }
-          });
-        }
-      });
-    }
-  });
-}
+Master.prototype._handlePollStart = function () {
+  this.messengerClient.publish("/poll/start", "started");
+};
 
-function handlePollStart() {
-  messengerClient.publish("/poll/start", true);
-}
+Master.prototype._handlePollStop = function () {
+  this.messengerClient.publish("/poll/stop", "stopped");
+};
 
-function handlePollStop() {
-  var tomorrow = new Date;
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  messengerClient.publish("/poll/stop", true);
-
-  getOrCreatePoll(tomorrow, function (err, poll) {
-    if (err) { throw err; }
-
-    updateCurrentPoll(poll);
-  });
-}
-
-function updateCurrentPoll(poll) {
-  // stop any existing poll timer
-  if (pollTimer) {
-    pollTimer.stop();
-  }
-
-  // update state
-  currentPoll = poll;
-  pollTimer = new PollTimer(poll.startTime, poll.endTime);
-
-  // setup event handlers
-  pollTimer.on("start", handlePollStart);
-  pollTimer.on("stop",  handlePollStop);
-
-  // start timer
-  pollTimer.start();
-}
-
-// begin the madness
-trackService.open(function (err) {
-  if (err) { throw err; }
-
-  getOrCreatePoll(new Date, function (err, poll) {
-    var tomorrow;
-
-    if (err) { throw err; }
-
-    // if poll has already ended, create tomorrow's
-    if ((new Date).getTime() >= poll.endTime) {
-      tomorrow = new Date;
-      tomorrow.setDate(tomorrow.getDate() + 1);
-
-      getOrCreatePoll(tomorrow, function (err, poll) {
-        if (err) { throw err; }
-        updateCurrentPoll(poll);
-      });
-    }
-    // otherwise use today's poll as the current one
-    else {
-      updateCurrentPoll(poll);
-    }
-  });
-});
-
-// start the messenger server
-messengerServer.listen(config.messenger.port);

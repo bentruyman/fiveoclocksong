@@ -17,7 +17,7 @@
     "tracksPerPoll": 5
   },
   "messenger": {
-    "mount": "/",
+    "mount": "pubsub",
     "port": 8000
   },
   "mongodb": {
