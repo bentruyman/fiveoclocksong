@@ -11,6 +11,8 @@ var config = require("../config"),
     Poll = require("../app-cov/models/poll")(mongoose, redis, trackService);
 
 describe("Poll Schema", function () {
+  this.timeout(4000);
+
   before(function (done) {
     trackService.open(done);
   });
