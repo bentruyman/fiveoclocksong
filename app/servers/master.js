@@ -21,6 +21,10 @@ var Master = module.exports = function (options) {
   var self = this,
       bayeux;
 
+  // set initial configuration
+  self.set("pollStartTime", config.app.poll.start);
+  self.set("pollEndTime", config.app.poll.end);
+
   // extend configuration options
   if (options) {
     Object.keys(options).forEach(function (key) {

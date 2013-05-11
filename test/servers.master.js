@@ -28,10 +28,29 @@ describe("Master", function () {
       var master = new Master({ foo: "bar" });
       master.get("foo").should.equal("bar");
     });
+
+    it("should set a default poll start and end time based on configuration options", function () {
+      var master = new Master;
+
+      master.get("pollStartTime").should.equal(config.app.poll.start);
+      master.get("pollEndTime").should.equal(config.app.poll.end);
+    });
+
+    it("should accept poll start and end times that override the default configuration options", function () {
+      var start = { hour: 2, minute: 30 },
+          end   = { hour: 9, minute: 30 },
+          master = new Master({
+            pollStartTime: start,
+            pollEndTime: end
+          });
+
+      master.get("pollStartTime").should.eql(start);
+      master.get("pollEndTime").should.eql(end);
+    });
   });
 
   describe("Messaging", function () {
-    this.timeout(10000);
+    this.timeout(3000);
 
     it("should publish a message when a poll starts", function (done) {
       var client = new faye.Client("http://localhost:" + config.messenger.port + "/" + config.messenger.mount),
