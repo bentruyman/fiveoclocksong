@@ -1,3 +1,5 @@
+var require = require("./helpers").require;
+
 var should = require("should"),
     sinon = require("sinon");
 
@@ -5,15 +7,15 @@ var faye = require("faye"),
     fayeRedis = require("faye-redis");
 
 var config = require("../config"),
-    MongooseClient = require("../app-cov/db/mongoose-client"),
-    RedisClient    = require("../app-cov/db/redis-client"),
-    TrackService   = require("../app-cov/services/track"),
+    MongooseClient = require("../app/db/mongoose-client"),
+    RedisClient    = require("../app/db/redis-client"),
+    TrackService   = require("../app/services/track"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
     redis = new RedisClient(config.redis.host, config.redis.port, config.redis.database),
     trackService = new TrackService(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PASSWORD),
-    Configurable = require("../app-cov/utils/configurable"),
-    Master       = require("../app-cov/servers/master"),
-    Poll         = require("../app-cov/models/poll")(mongoose, redis, trackService);
+    Configurable = require("../app/utils/configurable"),
+    Master       = require("../app/servers/master"),
+    Poll         = require("../app/models/poll")(mongoose, redis, trackService);
 
 describe("Master", function () {
   describe("Configuration", function () {

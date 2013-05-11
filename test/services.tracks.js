@@ -1,7 +1,9 @@
+var require = require("./helpers").require;
+
 var should = require("should"),
     sinon = require("sinon");
 
-var TrackService = require("../app-cov/services/track");
+var TrackService = require("../app/services/track");
 
 describe("Track Service", function () {
   this.timeout(5000);

@@ -1,3 +1,5 @@
+var require = require("./helpers").require;
+
 var should = require("should"),
     sinon = require("sinon");
 

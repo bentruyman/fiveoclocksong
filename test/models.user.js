@@ -1,10 +1,12 @@
+var require = require("./helpers").require;
+
 var should = require("should"),
     sinon = require("sinon");
 
 var config = require("../config"),
-    MongooseClient = require("../app-cov/db/mongoose-client"),
+    MongooseClient = require("../app/db/mongoose-client"),
     mongoose = new MongooseClient(config.mongodb.host, config.mongodb.port, config.mongodb.database),
-    User = require("../app-cov/models/user")(mongoose);
+    User = require("../app/models/user")(mongoose);
 
 describe("User Schema", function () {
   beforeEach(function (done) {
