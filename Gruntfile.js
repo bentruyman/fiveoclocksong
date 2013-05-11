@@ -11,7 +11,7 @@ module.exports = function (grunt) {
       }
     },
     cafemocha: {
-      src: "test/**/*.js",
+      src: "test/**/*.*.js",
       options: {
         reporter: "spec",
         ui: "bdd"
@@ -19,9 +19,8 @@ module.exports = function (grunt) {
     },
     clean: ["app-cov", "coverage.html"],
     env: {
-      test: {
-        NODE_ENV: "test"
-      }
+      coverage: { NODE_ENV: "development" },
+      test:     { NODE_ENV: "test" }
     },
     exec: {
       coverage: {
@@ -53,7 +52,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-env");
   grunt.loadNpmTasks('grunt-exec');
 
-  grunt.registerTask("test", ["env:test", "jshint", "blanket", "cafemocha"]);
+  grunt.registerTask("coverage", ["env:coverage", "blanket", "exec:coverage"]);
+  grunt.registerTask("test", ["env:test", "jshint", "cafemocha"]);
   grunt.registerTask("all", ["test"]);
   grunt.registerTask("default", "test");
 };
