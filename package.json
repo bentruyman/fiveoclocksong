@@ -23,6 +23,7 @@
     "settings": "~0.1.0",
     "spotify-web": "~0.1.2",
     "vein": "~0.5.3"
+    "winston": "~0.7.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
