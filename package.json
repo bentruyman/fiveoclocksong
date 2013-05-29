@@ -21,7 +21,7 @@
     "q": "~0.9.2",
     "redis": "~0.8.2",
     "settings": "~0.1.0",
-    "spotify-web": "~0.1.1",
+    "spotify-web": "~0.1.2",
     "vein": "~0.5.3"
   },
   "devDependencies": {
