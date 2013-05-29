@@ -46,8 +46,6 @@ describe("Master", function () {
 
       master.get("pollStartTime").should.eql(start);
       master.get("pollEndTime").should.eql(end);
-
-      master.stop();
     });
   });
 
