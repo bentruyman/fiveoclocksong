@@ -22,7 +22,8 @@
     "redis": "0.8.x",
     "settings": "0.1.x",
     "spotify-web": "0.1.x",
-    "vein": "0.5.x"
+    "vein": "0.5.x",
+    "yaml": "0.2.x"
   },
   "devDependencies": {
     "grunt": "0.4.x",

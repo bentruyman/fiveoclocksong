@@ -1,0 +1,6 @@
+mongodb:
+  database: "fiveoclocksong-dev"
+
+redis:
+  database: 1
+

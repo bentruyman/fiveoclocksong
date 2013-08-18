@@ -1,0 +1,5 @@
+mongodb:
+  database: "fiveoclocksong"
+
+redis:
+  database: 0
