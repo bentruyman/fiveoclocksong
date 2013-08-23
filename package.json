@@ -9,7 +9,7 @@
   "scripts": {
     "test": "grunt"
   },
-  "author": "Ben Truyman <ben@truyman.co> (http://bentruyman.com/)",
+  "author": "Ben Truyman <ben@truyman.com> (https://bentruyman.com/)",
   "readmeFilename": "README.md",
   "dependencies": {
     "bcrypt": "0.7.x",
