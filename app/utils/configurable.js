@@ -1,7 +1,10 @@
-var EventEmitter = require("events").EventEmitter;
+var EventEmitter = require("events").EventEmitter,
+    util = require("util");
 
 var Configurable = module.exports = function (defaults) {
   var key;
+
+  EventEmitter.call(this);
 
   this._settings = {};
 
@@ -12,7 +15,7 @@ var Configurable = module.exports = function (defaults) {
   }
 };
 
-Configurable.prototype = new EventEmitter;
+util.inherits(Configurable, EventEmitter);
 
 Configurable.prototype.get = function (key) {
   return this._settings[key];

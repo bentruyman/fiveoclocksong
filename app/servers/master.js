@@ -1,4 +1,5 @@
-var http = require("http");
+var http = require("http"),
+    util = require("util");
 
 var faye = require("faye"),
     fayeRedis = require("faye-redis");
@@ -20,6 +21,8 @@ var Configurable = require("../utils/configurable"),
 var Master = module.exports = function (options) {
   var self = this,
       bayeux;
+
+  Configurable.call(this);
 
   // set initial configuration
   self.set("pollStartTime", config.app.poll.start);
@@ -52,7 +55,7 @@ var Master = module.exports = function (options) {
   bayeux.attach(this.messengerServer);
 };
 
-Master.prototype = new Configurable;
+util.inherits(Master, Configurable);
 
 Master.prototype.start = function () {
   var currentPoll = this.currentPoll;
