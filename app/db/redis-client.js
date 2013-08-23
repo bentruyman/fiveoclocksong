@@ -2,8 +2,8 @@ var redis = require("redis"),
     config = require("../../config");
 
 var RedisClient = module.exports = function RedisClient(host, port, database) {
-  var conf = config.redis,
-      client;
+  var client,
+      conf = config.redis;
 
   host = host || conf.host;
   port = port || conf.port;

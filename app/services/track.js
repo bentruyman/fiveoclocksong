@@ -28,8 +28,8 @@ TrackService.prototype.getPlaylist = function (playlistId, hollaback) {
   var self = this;
 
   this._client.playlist(playlistId, function (err, playlist) {
-    var promises = [],
-        trackIds;
+    var trackIds,
+        promises = [];
 
     if (err) {
       hollaback(err);

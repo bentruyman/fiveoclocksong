@@ -19,8 +19,8 @@ var Configurable = require("../utils/configurable"),
 
 // public interface
 var Master = module.exports = function (options) {
-  var self = this,
-      bayeux;
+  var bayeux,
+      self = this;
 
   Configurable.call(this);
 
