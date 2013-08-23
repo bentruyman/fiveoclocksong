@@ -13,6 +13,7 @@ app:
 
 messenger:
   mount: "pubsub"
+  host: "localhost"
   port: 8000
 
 mongodb:

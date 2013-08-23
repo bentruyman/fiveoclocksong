@@ -50,7 +50,7 @@ var Master = module.exports = function (options) {
     }
   });
   this.messengerServer = http.createServer();
-  this.messengerClient = new faye.Client("http://localhost:" + config.messenger.port + "/" + config.messenger.mount);
+  this.messengerClient = new faye.Client("http://" + config.messenger.host + ":" + config.messenger.port + "/" + config.messenger.mount);
 
   bayeux.attach(this.messengerServer);
 };
