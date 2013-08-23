@@ -53,7 +53,7 @@ describe("Master", function () {
     this.timeout(3000);
 
     it("should publish a message when a poll starts", function (done) {
-      var client = new faye.Client("http://localhost:" + config.messenger.port + "/" + config.messenger.mount),
+      var client = new faye.Client("http://" + config.messenger.host + ":" + config.messenger.port + "/" + config.messenger.mount),
           master = new Master,
           today = new Date,
           now = today.getTime(),
@@ -77,7 +77,7 @@ describe("Master", function () {
     });
 
     it("should publish a message when a poll stops", function (done) {
-      var client = new faye.Client("http://localhost:" + config.messenger.port + "/" + config.messenger.mount),
+      var client = new faye.Client("http://" + config.messenger.host + ":" + config.messenger.port + "/" + config.messenger.mount),
           master = new Master,
           today = new Date,
           now = today.getTime(),
