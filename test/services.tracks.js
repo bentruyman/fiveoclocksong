@@ -46,8 +46,8 @@ describe("Track Service", function () {
       trackService.open(function (err) {
         should.exist(err);
         done();
-      })
-    })
+      });
+    });
   });
 
   describe("Playlists", function () {
