@@ -22,17 +22,15 @@ var Master = module.exports = function (options) {
   var bayeux,
       self = this;
 
-  Configurable.call(this);
+  Configurable.call(this, options);
 
   // set initial configuration
-  self.set("pollStartTime", config.app.poll.start);
-  self.set("pollEndTime", config.app.poll.end);
+  if (self.get("pollStartTime") === undefined) {
+    self.set("pollStartTime", config.app.poll.start);
+  }
 
-  // extend configuration options
-  if (options) {
-    Object.keys(options).forEach(function (key) {
-      self.set(key, options[key]);
-    });
+  if (self.get("pollEndTime") === undefined) {
+    self.set("pollEndTime", config.app.poll.end);
   }
 
   // set initial instance property values
